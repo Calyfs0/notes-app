@@ -5,4 +5,4 @@ from django.shortcuts import render
 
 
 def index(request):
-    return HttpResponse("Hello, welcome to the To-Do app!")
+    return render(request, 'todo/index.html', {'message': 'Hello, World!'})
