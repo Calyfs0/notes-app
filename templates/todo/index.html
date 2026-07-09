@@ -19,13 +19,158 @@
         height: 30px;
         margin-top: 20px;
     }
+
+        /* Base styles for the background overlay */
+    .modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    }
+
+    /* The actual modal box */
+    .modal-box {
+    background-color: #fff;
+    padding: 24px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 450px;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease;
+    }
+
+    .modal-box h2{
+        text-align: center;
+    }
+
+    /* Close button (X) */
+    .close-btn {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    }
+
+    .close-btn:hover {
+    color: #000;
+    }
+
+    /* Class to toggle visibility via JavaScript */
+    .modal-overlay.show {
+    display: flex;
+    }
+
+    /* Quick entry animation */
+    @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+    }
+
+    .field-row {
+        display: flex;
+        align-items: center;
+        gap:12px;
+        margin-bottom:12px;
+    }
+
+    .field-row label {
+        width: 110px;
+        flex-shrink: 0;
+    }
+
+    .field-row input,
+    .field-row textarea,
+    .field-row button {
+        flex: 1;
+        width: 100%;
+    }
+
     </style>
     
 </head>
 <body>
     <div id="header">
     <h1>My Todo List</h1>
-    <button id="add-todo" onclick="addTodo()">Add Todo</button>
+    <button id="add-todo">Add Todo</button>
     </div>
+    <div id="todo-list"></div>
+    <div id="modalOverlay" class="modal-overlay">
+  <div class="modal-box">
+    <span id="closeModalBtn" class="close-btn">&times;</span>
+    <h2>ADD TODO</h2>
+    <div class="field-row">
+        <label for="title">Title</label> 
+        <input id="title" type="text" />
+    </div>
+    <div class="field-row">
+        <label for="description">Description</label>
+        <textarea id="description" ></textarea>
+    </div>
+    <div class="field-row">
+        <button id="save-button">Save</button>
+        <button id="cancel-button">Cancel</button>
+    </div>
+    
+  </div>
+</div>
 </body>
+<script>
+    console.log("Javascript loaded");
+    const openModalButton = document.getElementById('add-todo');
+    const closeModalButton = document.getElementById('closeModalBtn');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const savebutton = document.getElementById('save-button');
+    const cancelbutton = document.getElementById('cancel-button');
+    const title = document.getElementById('title');
+    const description = document.getElementById('description');
+    const todoList = document.getElementById('todo-list');
+
+    openModalButton.addEventListener('click', () => {
+        console.log("Button clicked");
+        modalOverlay.classList.add('show')
+    });
+
+    closeModalButton.addEventListener('click', () => {
+        modalOverlay.classList.remove('show') });
+
+    window.addEventListener('click', (event) => {
+        if(event.target === modalOverlay){
+            modalOverlay.classList.remove('show')
+        }
+    });
+
+    savebutton.addEventListener('click', () => {
+        let titleText = title.value;
+        let descriptionText = description.value;
+        if(!titleText) return;
+
+        const todoItem = document.createElement('div');
+        todoItem.className = 'todo-item';
+        todoItem.innerHTML = `
+            <h3>${titleText}</h3>
+            <p>${descriptionText}</p>
+        `;
+
+        todoList.appendChild(todoItem);
+
+        title.value = '';
+        description.value = '';
+        modalOverlay.classList.remove('show');
+    });
+
+    cancelbutton.addEventListener('click', () => {
+        title.value = '';
+        description.value = '';
+        modalOverlay.classList.remove('show');
+    })
+</script>
 </html>
